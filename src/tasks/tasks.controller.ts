@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post } from "@nestjs/common";
 import { TasksService } from "./tasks.service";
-import { Task } from "./task.model";
+import { Task, TasksStatus } from "./task.model";
 import CreateTaskDto from "./dto/create-task.dto";
 import { taskLoggingTemplate } from "../utils/taskLoggingTemplate";
 
@@ -53,5 +53,14 @@ export class TasksController {
 
 		this.tasksService.deleteTaskById(id);
 		this.logger.log(`Task ${JSON.stringify(requestingTaskToDelete)} deleted.`);
+	}
+
+	@Patch("/:id/status")
+	editTaskStatus(@Param("id") id: string, @Body("status") status: TasksStatus): Task {
+		if (!status) {
+			this.logger.warn("Status is not provided");
+			return;
+		}
+		return this.tasksService.editTaskStatus(id, status);
 	}
 }
