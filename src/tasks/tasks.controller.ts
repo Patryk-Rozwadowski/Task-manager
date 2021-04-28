@@ -1,9 +1,22 @@
-import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Logger,
+	Param,
+	Patch,
+	Post,
+	Query,
+	UsePipes,
+	ValidationPipe,
+} from "@nestjs/common";
 import { TasksService } from "./tasks.service";
 import { Task, TasksStatus } from "./task.model";
 import CreateTaskDto from "./dto/create-task.dto";
 import { taskLoggingTemplate } from "../utils/taskLoggingTemplate";
 import GetTasksFilterDto from "./dto/get-tasks-filter.dto";
+import TaskStatusValidationPipe from "./pipes/task-status-validation.pipe";
 
 @Controller("tasks")
 export class TasksController {
@@ -30,19 +43,11 @@ export class TasksController {
 
 	@Get("/:id")
 	getTaskById(@Param("id") searchedId: string): Task {
-		const foundTask = this.tasksService.getTaskById(searchedId);
-		if (!foundTask) {
-			this.logger.warn("Task doesn't exist!");
-			return;
-		}
-		this.logger.log(`
-		Task found: 
-			${taskLoggingTemplate(foundTask)}
-		`);
-		return foundTask;
+		return this.tasksService.getTaskById(searchedId);
 	}
 
 	@Post()
+	@UsePipes(ValidationPipe)
 	createTask(@Body() createTaskDto: CreateTaskDto): Task {
 		const createdNewTask = this.tasksService.createTask(createTaskDto);
 		this.logger.log(`Created new task: ${taskLoggingTemplate(createdNewTask)}`);
@@ -68,11 +73,10 @@ export class TasksController {
 	}
 
 	@Patch("/:id/status")
-	editTaskStatus(@Param("id") id: string, @Body("status") status: TasksStatus): Task {
-		if (!status) {
-			this.logger.warn("Status is not provided");
-			return;
-		}
+	editTaskStatus(
+		@Param("id") id: string,
+		@Body("status", TaskStatusValidationPipe) status: TasksStatus,
+	): Task {
 		return this.tasksService.editTaskStatus(id, status);
 	}
 }

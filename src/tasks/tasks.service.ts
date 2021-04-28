@@ -1,8 +1,9 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { Task, TasksStatus } from "./task.model";
 import { v4 as uuidv4 } from "uuid";
 import CreateTaskDto from "./dto/create-task.dto";
 import GetTasksFilterDto from "./dto/get-tasks-filter.dto";
+import { taskLoggingTemplate } from "../utils/taskLoggingTemplate";
 
 @Injectable()
 export class TasksService {
@@ -46,21 +47,24 @@ export class TasksService {
 	}
 
 	getTaskById(id: string): Task {
-		return this.tasks.find((task: Task) => task.id === id);
+		const foundTask = this.tasks.find((task: Task) => task.id === id);
+		if (!foundTask) {
+			throw new NotFoundException(`Task with ${id} not found.`);
+		}
+		this.logger.log(`
+		Task found: 
+			${taskLoggingTemplate(foundTask)}
+		`);
+		return foundTask;
 	}
 
 	deleteTaskById(id: string) {
-		this.tasks = this.tasks.filter((task) => task.id !== id);
+		const taskToDelete = this.getTaskById(id);
+		this.tasks = this.tasks.filter((task) => task.id !== taskToDelete.id);
 	}
 
 	editTaskStatus(id: string, status: TasksStatus) {
 		const taskToEdit = this.getTaskById(id);
-		if (!taskToEdit) {
-			this.logger.warn(`Task with id ${id} not found`);
-			return;
-		}
-
-		this.logger.log(`Task title: ${taskToEdit.title} changed status from: ${taskToEdit.status} to ${status}`);
 		taskToEdit.status = status;
 		return taskToEdit;
 	}
