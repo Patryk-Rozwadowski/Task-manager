@@ -17,7 +17,14 @@ import CreateTaskDto from "./dto/create-task.dto";
 import { taskLoggingTemplate } from "../utils/taskLoggingTemplate";
 import GetTasksFilterDto from "./dto/get-tasks-filter.dto";
 import TaskStatusValidationPipe from "./pipes/task-status-validation.pipe";
+import { ApiOperation, ApiProperty, ApiResponse } from "@nestjs/swagger";
 
+type ITask = {
+	id: string;
+	title: string;
+	description: string;
+	status: TasksStatus;
+};
 @Controller("tasks")
 export class TasksController {
 	private logger = new Logger("TasksController");
@@ -25,6 +32,8 @@ export class TasksController {
 	constructor(private tasksService: TasksService) {}
 
 	@Get()
+	@ApiOperation({ summary: "Get all tasks if not filter is provided" })
+	@ApiResponse({ status: 200, description: "Array of tasks.", type: ITask })
 	getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Task[] {
 		if (Object.keys(filterDto).length) {
 			this.logger.log(
@@ -36,7 +45,9 @@ export class TasksController {
 			);
 			return this.tasksService.getTasksWithFilters(filterDto);
 		} else {
-			this.logger.log(`Getting all tasks ${JSON.stringify(this.tasksService.getAllTasks(), null, 2)}`);
+			this.logger.log(
+				`No filters provided - Getting all tasks ${JSON.stringify(this.tasksService.getAllTasks(), null, 2)}`,
+			);
 			return this.tasksService.getAllTasks();
 		}
 	}

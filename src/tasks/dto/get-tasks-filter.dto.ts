@@ -1,5 +1,5 @@
 import { TasksStatus } from "../task.model";
-import { IsIn, IsNotEmpty, IsOptional } from "class-validator";
+import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { allowedTaskStatuses } from "../../utils/allowedTaskStatuses";
 
 class GetTasksFilterDto {
@@ -9,6 +9,8 @@ class GetTasksFilterDto {
 
 	@IsOptional()
 	@IsNotEmpty()
+	@IsString()
+	@IsInt()
 	search: string;
 }
 

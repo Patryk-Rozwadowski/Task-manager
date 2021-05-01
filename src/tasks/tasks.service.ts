@@ -16,18 +16,15 @@ export class TasksService {
 
 	getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
 		const { status, search } = filterDto;
-
+		this.logger.log(`Getting tasks with filter: ${Object.keys(filterDto)}`);
 		let tasks = this.getAllTasks();
 
-		if (status) {
-			tasks = tasks.filter((task) => task);
-		}
+		if (status) tasks = tasks.filter((task) => task);
 
-		if (search) {
+		if (search)
 			tasks = tasks.filter((task) => {
 				return task.title.includes(search) || task.description.includes(search);
 			});
-		}
 
 		return tasks;
 	}
