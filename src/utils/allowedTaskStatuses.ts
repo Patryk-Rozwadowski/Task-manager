@@ -1,5 +1,5 @@
-import { TasksStatus } from "../tasks/task.model";
+import { TasksStatusEnum } from "../tasks/enum/tasks-status.enum";
 
-const allowedTaskStatuses = [TasksStatus.OPEN, TasksStatus.IN_PROGRESS, TasksStatus.DONE];
+const allowedTaskStatuses = [TasksStatusEnum.OPEN, TasksStatusEnum.IN_PROGRESS, TasksStatusEnum.DONE];
 
 export { allowedTaskStatuses };

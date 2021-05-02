@@ -11,20 +11,15 @@ import {
 	UsePipes,
 	ValidationPipe,
 } from "@nestjs/common";
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { TasksService } from "./tasks.service";
-import { Task, TasksStatus } from "./task.model";
 import CreateTaskDto from "./dto/create-task.dto";
 import { taskLoggingTemplate } from "../utils/taskLoggingTemplate";
 import GetTasksFilterDto from "./dto/get-tasks-filter.dto";
 import TaskStatusValidationPipe from "./pipes/task-status-validation.pipe";
-import { ApiOperation, ApiProperty, ApiResponse } from "@nestjs/swagger";
+import { ITask } from "./tasks";
+import { TasksStatusEnum } from "./enum/tasks-status.enum";
 
-type ITask = {
-	id: string;
-	title: string;
-	description: string;
-	status: TasksStatus;
-};
 @Controller("tasks")
 export class TasksController {
 	private logger = new Logger("TasksController");
@@ -33,8 +28,9 @@ export class TasksController {
 
 	@Get()
 	@ApiOperation({ summary: "Get all tasks if not filter is provided" })
-	@ApiResponse({ status: 200, description: "Array of tasks.", type: ITask })
-	getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Task[] {
+	@ApiParam({ name: "getTasks", type: GetTasksFilterDto })
+	@ApiResponse({ status: 200, description: "Array of tasks.", isArray: true })
+	getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): ITask[] {
 		if (Object.keys(filterDto).length) {
 			this.logger.log(
 				`Getting tasks with filter: ${Object.keys(filterDto)} ${JSON.stringify(
@@ -53,41 +49,34 @@ export class TasksController {
 	}
 
 	@Get("/:id")
-	getTaskById(@Param("id") searchedId: string): Task {
+	getTaskById(@Param("id") searchedId: string): ITask {
 		return this.tasksService.getTaskById(searchedId);
 	}
 
 	@Post()
+	@ApiOperation({ summary: "Create new task", description: "Creating new task" })
+	@ApiQuery({ name: "Task status", enum: TasksStatusEnum })
+	@ApiParam({ name: "create task param", type: CreateTaskDto })
+	@ApiBody({ type: [CreateTaskDto] })
 	@UsePipes(ValidationPipe)
-	createTask(@Body() createTaskDto: CreateTaskDto): Task {
+	createTask(@Body() createTaskDto: CreateTaskDto): ITask {
 		const createdNewTask = this.tasksService.createTask(createTaskDto);
 		this.logger.log(`Created new task: ${taskLoggingTemplate(createdNewTask)}`);
 		return createdNewTask;
 	}
 
 	@Delete("/:id")
-	deleteTaskById(@Param("id") id: string): void {
-		const requestingTaskToDelete = this.tasksService.getTaskById(id);
-
-		if (!requestingTaskToDelete) {
-			this.logger.log(`Task with id ${id} doesnt exist!`);
-			return;
-		}
-
-		if (typeof id !== "string") {
-			this.logger.warn("Given id is not string");
-			return;
-		}
-
+	@ApiOperation({ summary: "Delete task", description: "Delete user's taks with given task's id" })
+	deleteTaskById(@Param("id", ValidationPipe) id: string): void {
 		this.tasksService.deleteTaskById(id);
-		this.logger.log(`Task ${JSON.stringify(requestingTaskToDelete)} deleted.`);
+		this.logger.log(`Task ${JSON.stringify(id)} deleted.`);
 	}
 
 	@Patch("/:id/status")
 	editTaskStatus(
 		@Param("id") id: string,
-		@Body("status", TaskStatusValidationPipe) status: TasksStatus,
-	): Task {
+		@Body("status", TaskStatusValidationPipe) status: TasksStatusEnum,
+	): ITask {
 		return this.tasksService.editTaskStatus(id, status);
 	}
 }

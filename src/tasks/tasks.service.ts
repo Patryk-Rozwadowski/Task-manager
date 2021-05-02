@@ -1,20 +1,21 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { Task, TasksStatus } from "./task.model";
 import { v4 as uuidv4 } from "uuid";
 import CreateTaskDto from "./dto/create-task.dto";
 import GetTasksFilterDto from "./dto/get-tasks-filter.dto";
 import { taskLoggingTemplate } from "../utils/taskLoggingTemplate";
+import { ITask } from "./tasks";
+import { TasksStatusEnum } from "./enum/tasks-status.enum";
 
 @Injectable()
 export class TasksService {
 	private logger = new Logger("TaskService");
-	private tasks: Array<Task> = [];
+	private tasks: Array<ITask> = [];
 
-	getAllTasks(): Task[] {
+	getAllTasks(): ITask[] {
 		return this.tasks;
 	}
 
-	getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
+	getTasksWithFilters(filterDto: GetTasksFilterDto): ITask[] {
 		const { status, search } = filterDto;
 		this.logger.log(`Getting tasks with filter: ${Object.keys(filterDto)}`);
 		let tasks = this.getAllTasks();
@@ -29,22 +30,22 @@ export class TasksService {
 		return tasks;
 	}
 
-	createTask(createTaskDto: CreateTaskDto): Task {
+	createTask(createTaskDto: CreateTaskDto): ITask {
 		const { title, description } = createTaskDto;
 
-		const task: Task = {
+		const task: ITask = {
 			id: uuidv4(),
 			title,
 			description,
-			status: TasksStatus.OPEN,
+			status: TasksStatusEnum.OPEN,
 		};
 
 		this.tasks.push(task);
 		return task;
 	}
 
-	getTaskById(id: string): Task {
-		const foundTask = this.tasks.find((task: Task) => task.id === id);
+	getTaskById(id: string): ITask {
+		const foundTask = this.tasks.find((task: ITask) => task.id === id);
 		if (!foundTask) {
 			throw new NotFoundException(`Task with ${id} not found.`);
 		}
@@ -60,9 +61,9 @@ export class TasksService {
 		this.tasks = this.tasks.filter((task) => task.id !== taskToDelete.id);
 	}
 
-	editTaskStatus(id: string, status: TasksStatus) {
+	editTaskStatus(id: string, status: TasksStatusEnum) {
 		const taskToEdit = this.getTaskById(id);
-		taskToEdit.status = status;
+		taskToEdit.status = <TasksStatusEnum.OPEN>status;
 		return taskToEdit;
 	}
 }
