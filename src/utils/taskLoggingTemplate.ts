@@ -1,6 +1,4 @@
-import { ITask } from "../tasks/tasks";
-
-const taskLoggingTemplate = (task: ITask): string => {
+const taskLoggingTemplate = (task): string => {
 	const { id, status, title, description } = task;
 	return `
         title: ${title}
