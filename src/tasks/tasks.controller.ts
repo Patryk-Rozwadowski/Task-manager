@@ -8,11 +8,11 @@ import {
 	ParseIntPipe,
 	Patch,
 	Post,
-	Query,
 	UsePipes,
 	ValidationPipe,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { DeleteResult } from "typeorm";
 import { TasksService } from "./tasks.service";
 import CreateTaskDto from "./dto/create-task.dto";
 import { taskLoggingTemplate } from "../utils/taskLoggingTemplate";
@@ -20,8 +20,6 @@ import GetTasksFilterDto from "./dto/get-tasks-filter.dto";
 import TaskStatusValidationPipe from "./pipes/task-status-validation.pipe";
 import { TasksStatusEnum } from "./enum/tasks-status.enum";
 import Task from "./task.entity";
-import { DeleteResult } from "typeorm";
-import { filter } from "rxjs/operators";
 
 @Controller("tasks")
 export class TasksController {
@@ -33,22 +31,7 @@ export class TasksController {
 	@ApiOperation({ summary: "Get all tasks if not filter is provided" })
 	@ApiParam({ name: "getTasks", type: GetTasksFilterDto })
 	@ApiResponse({ status: 200, description: "Array of tasks.", isArray: true })
-	getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Promise<Task[]> {
-		// if (Object.keys(filterDto).length) {
-		// 	this.logger.log(
-		// 		`Getting tasks with filter: ${Object.keys(filterDto)} ${JSON.stringify(
-		// 			this.tasksService.getAllTasks(),
-		// 			null,
-		// 			2,
-		// 		)}`,
-		// 	);
-		// 	return this.tasksService.getTasksWithFilters(filterDto);
-		// } else {
-		// 	this.logger.log(
-		// 		`No filters provided - Getting all tasks ${JSON.stringify(this.tasksService.getAllTasks(), null, 2)}`,
-		// 	);
-		// 	return this.tasksService.getAllTasks();
-		// }
+	getTasks(@Body(ValidationPipe) filterDto: GetTasksFilterDto): Promise<Task[]> {
 		return this.tasksService.getTasks(filterDto);
 	}
 
@@ -56,6 +39,7 @@ export class TasksController {
 	getTaskById(@Param("id", ParseIntPipe) searchedId: number): Promise<Task> {
 		return this.tasksService.getTaskById(searchedId);
 	}
+
 	//
 	@Post()
 	@ApiOperation({ summary: "Create new task", description: "Creating new task" })
@@ -68,6 +52,7 @@ export class TasksController {
 		this.logger.log(`Created new task: ${taskLoggingTemplate(createdNewTask)}`);
 		return createdNewTask;
 	}
+
 	//
 	@Delete("/:id")
 	@ApiOperation({ summary: "Delete task", description: "Delete user's taks with given task's id" })

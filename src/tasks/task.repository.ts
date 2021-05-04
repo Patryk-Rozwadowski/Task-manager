@@ -1,15 +1,27 @@
+import { Logger, NotFoundException } from "@nestjs/common";
 import { DeleteResult, EntityRepository, Repository } from "typeorm";
 import Task from "./task.entity";
 import CreateTaskDto from "./dto/create-task.dto";
 import { TasksStatusEnum } from "./enum/tasks-status.enum";
-import { Logger, NotFoundException } from "@nestjs/common";
+import GetTasksFilterDto from "./dto/get-tasks-filter.dto";
 
 @EntityRepository(Task)
 class TaskRepository extends Repository<Task> {
 	logger = new Logger("TaskRespository");
 
-	async getTasks(): Promise<Task[]> {
-		const tasks = this.find({});
+	async getAllTasks(): Promise<Task[]> {
+		return this.find({});
+	}
+
+	async getTasksWithFilter(filterDto: GetTasksFilterDto): Promise<Task[]> {
+		const { status, search } = filterDto;
+		this.logger.log(`Getting tasks with filter: ${Object.keys(filterDto)}`);
+		let tasks = await this.getAllTasks();
+		if (status) tasks = tasks.filter((task) => task.status === status);
+		if (search)
+			tasks = tasks.filter((task) => {
+				return task.title.includes(search) || task.description.includes(search);
+			});
 		return tasks;
 	}
 

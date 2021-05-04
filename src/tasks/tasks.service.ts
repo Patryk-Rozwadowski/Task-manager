@@ -15,30 +15,12 @@ export class TasksService {
 		@InjectRepository(TaskRepository)
 		private taskRepository: TaskRepository,
 	) {}
-	// private tasks: Array<ITask> = [];
-	//
-	// getAllTasks(): ITask[] {
-	// 	return this.tasks;
-	// }
-	//
-	// getTasksWithFilters(filterDto: GetTasksFilterDto): ITask[] {
-	// 	const { status, search } = filterDto;
-	// 	this.logger.log(`Getting tasks with filter: ${Object.keys(filterDto)}`);
-	// 	let tasks = this.getAllTasks();
-	//
-	// 	if (status) tasks = tasks.filter((task) => task);
-	//
-	// 	if (search)
-	// 		tasks = tasks.filter((task) => {
-	// 			return task.title.includes(search) || task.description.includes(search);
-	// 		});
-	//
-	// 	return tasks;
-	// }
-	//
 
 	async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
-		return this.taskRepository.getTasks();
+		if (Object.keys(filterDto).length >= 1) {
+			return await this.taskRepository.getTasksWithFilter(filterDto);
+		}
+		return this.taskRepository.getAllTasks();
 	}
 
 	async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
