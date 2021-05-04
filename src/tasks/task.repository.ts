@@ -15,14 +15,14 @@ class TaskRepository extends Repository<Task> {
 
 	async getTasksWithFilter(filterDto: GetTasksFilterDto): Promise<Task[]> {
 		const { status, search } = filterDto;
-		this.logger.log(`Getting tasks with filter: ${Object.keys(filterDto)}`);
-		let tasks = await this.getAllTasks();
-		if (status) tasks = tasks.filter((task) => task.status === status);
+		this.logger.log(`Getting tasks with filter: ${Object.keys(filterDto)} - ${Object.values(filterDto)}`);
+
+		const query = this.createQueryBuilder("task");
+
+		if (status) query.andWhere("task.status = :status", { status });
 		if (search)
-			tasks = tasks.filter((task) => {
-				return task.title.includes(search) || task.description.includes(search);
-			});
-		return tasks;
+			query.andWhere("(task.title LIKE :search OR task.description LIKE :search)", { search: `%${search}%` });
+		return await query.getMany();
 	}
 
 	async findTaskById(id: number): Promise<Task> {

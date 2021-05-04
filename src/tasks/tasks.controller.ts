@@ -8,6 +8,7 @@ import {
 	ParseIntPipe,
 	Patch,
 	Post,
+	Query,
 	UsePipes,
 	ValidationPipe,
 } from "@nestjs/common";
@@ -31,7 +32,7 @@ export class TasksController {
 	@ApiOperation({ summary: "Get all tasks if not filter is provided" })
 	@ApiParam({ name: "getTasks", type: GetTasksFilterDto })
 	@ApiResponse({ status: 200, description: "Array of tasks.", isArray: true })
-	getTasks(@Body(ValidationPipe) filterDto: GetTasksFilterDto): Promise<Task[]> {
+	getTasks(@Query(ValidationPipe) filterDto: GetTasksFilterDto): Promise<Task[]> {
 		return this.tasksService.getTasks(filterDto);
 	}
 
@@ -40,7 +41,6 @@ export class TasksController {
 		return this.tasksService.getTaskById(searchedId);
 	}
 
-	//
 	@Post()
 	@ApiOperation({ summary: "Create new task", description: "Creating new task" })
 	@ApiQuery({ name: "Task status", enum: TasksStatusEnum })
