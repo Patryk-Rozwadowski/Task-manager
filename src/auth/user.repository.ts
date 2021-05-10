@@ -1,7 +1,8 @@
 import { EntityRepository, Repository } from "typeorm";
+import { ConflictException, InternalServerErrorException, Logger } from "@nestjs/common";
+import * as bcrypt from "bcrypt";
 import User from "./user.entity";
 import AuthCredentialsDto from "./dto/auth-credentials.dto";
-import { ConflictException, InternalServerErrorException, Logger } from "@nestjs/common";
 
 @EntityRepository(User)
 class UserRepository extends Repository<User> {
@@ -12,7 +13,8 @@ class UserRepository extends Repository<User> {
 
 		const newUser = new User();
 		newUser.username = username;
-		newUser.password = password;
+		newUser.salt = await bcrypt.genSalt();
+		newUser.password = await UserRepository._hashPassword(password, newUser.salt);
 
 		try {
 			await newUser.save();
@@ -24,9 +26,14 @@ class UserRepository extends Repository<User> {
 					In fact, code 23505 stands for already existing user in database,
 					but we can't notify other users with such a information, because of safety matters.
 				 */
+				this.logger.warn(`Username ${username} already exists.`);
 				throw new ConflictException(`Username error.`);
 			} else throw new InternalServerErrorException();
 		}
+	}
+
+	private static async _hashPassword(password: string, salt: string): Promise<string> {
+		return bcrypt.hash(password, salt);
 	}
 }
 
