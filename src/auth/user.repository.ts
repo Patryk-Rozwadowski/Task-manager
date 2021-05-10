@@ -18,7 +18,7 @@ class UserRepository extends Repository<User> {
 			await newUser.save();
 			this.logger.log(`New user created ${username}`);
 		} catch ({ code }) {
-			const userAlreadyExistsWithUsername = code === " ";
+			const userAlreadyExistsWithUsername = code === "23505";
 			if (userAlreadyExistsWithUsername) {
 				/*
 					In fact, code 23505 stands for already existing user in database,
