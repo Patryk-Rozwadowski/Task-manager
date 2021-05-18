@@ -1,6 +1,6 @@
+import * as bcrypt from "bcrypt";
 import { EntityRepository, Repository } from "typeorm";
 import { ConflictException, InternalServerErrorException, Logger } from "@nestjs/common";
-import * as bcrypt from "bcrypt";
 import User from "./user.entity";
 import AuthCredentialsDto from "./dto/auth-credentials.dto";
 
@@ -29,6 +29,15 @@ class UserRepository extends Repository<User> {
 				this.logger.warn(`Username ${username} already exists.`);
 				throw new ConflictException(`Username error.`);
 			} else throw new InternalServerErrorException();
+		}
+	}
+
+	async validatePassword(authCredentialsDto: AuthCredentialsDto): Promise<boolean> {
+		const { username, password } = authCredentialsDto;
+		const user = await this.findOne({ username });
+
+		if (user && (await user.validatePassword(password))) {
+			return true;
 		}
 	}
 
