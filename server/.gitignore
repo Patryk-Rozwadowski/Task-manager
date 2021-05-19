@@ -126,8 +126,8 @@ server/dist/
 .vscode-test
 
 # Dependencies
-client/node_modules
-server/node_modules
+client/node_modules/
+server/node_modules/
 
 # Temporary folders
 tmp/
