@@ -7,10 +7,11 @@
   },
   "scripts": {
     "client:format": "cd client && yarn run format",
-    "server:format": "cd servere && yarn run format"
+    "server:format": "cd server && yarn run format"
   },
   "husky": {
     "hooks": {
+      "pre-commit": "npm-run-all client:format server:format"
     }
   }
 }
