@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "husky": "^6.0.0"
+  }
+}
