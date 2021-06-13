@@ -5,10 +5,7 @@
     "plugin:prettier/recommended"
   ],
   "plugins": [
-    "@typescript-eslint",
-    "eslint-plugin-import",
-    "eslint-plugin-prettier",
-    "prettier"
+    "@typescript-eslint"
   ],
   "rules": {
     "@typescript-eslint/no-explicit-any": "off",

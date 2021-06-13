@@ -1,0 +1,24 @@
+{
+   "env": {
+      "node": true,
+      "jest": true
+   },
+   "parser": "@typescript-eslint/parser",
+   "parserOptions": {
+      "project": "tsconfig.json",
+      "sourceType": "module"
+   },
+   "extends": ["../../.eslintrc.json"],
+   "root": true,
+   "ignorePatterns": [".eslintrc"],
+   "rules": {
+      "no-inner-declarations": "off",
+      "max-params": ["warn", 3],
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+         "error",
+         { "vars": "all", "args": "after-used", "varsIgnorePattern": "_", "ignoreRestSiblings": true }
+      ]
+   }
+}
