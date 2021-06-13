@@ -7,7 +7,7 @@
       "build": "next build",
       "start": "next start",
       "prettier:check": "prettier \"*.ts\"",
-      "prettier:format": "prettier --write \"src/**/*.ts\"",
+      "prettier:format": "prettier --write \"*.ts\"",
       "lint": "eslint ./*.{ts,tsx}",
       "lint:fix": "eslint ./*.{ts,tsx} --fix"
    },

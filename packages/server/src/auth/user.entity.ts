@@ -3,22 +3,22 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "type
 @Entity()
 @Unique(["username"])
 class User extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
+   @PrimaryGeneratedColumn()
+   id: number;
 
-	@Column()
-	username: string;
+   @Column()
+   username: string;
 
-	@Column()
-	password: string;
+   @Column()
+   password: string;
 
-	@Column()
-	salt: string;
+   @Column()
+   salt: string;
 
-	public async validatePassword(inputPassword: string): Promise<boolean> {
-		const hashedInputPassword = await bcrypt.hash(inputPassword, this.salt);
-		return hashedInputPassword === this.password;
-	}
+   public async validatePassword(inputPassword: string): Promise<boolean> {
+      const hashedInputPassword = await bcrypt.hash(inputPassword, this.salt);
+      return hashedInputPassword === this.password;
+   }
 }
 
 export default User;
