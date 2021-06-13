@@ -6,6 +6,8 @@
       "start:dev": "next dev",
       "build": "next build",
       "start": "next start",
+      "prettier:check": "prettier \"*.ts\"",
+      "prettier:format": "prettier --write \"src/**/*.ts\"",
       "lint": "eslint ./*.{ts,tsx}",
       "lint:fix": "eslint ./*.{ts,tsx} --fix"
    },
