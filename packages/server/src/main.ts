@@ -4,9 +4,9 @@ import { Logger } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 async function bootstrap() {
-	const port = 3000;
 	const logger = new Logger("bootstrap");
 	const app = await NestFactory.create(AppModule);
+   const port = 3001;
 
 	const config = new DocumentBuilder()
 		.setTitle("Task manager")
