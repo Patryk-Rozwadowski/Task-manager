@@ -5,13 +5,15 @@ import AuthCredentialsDto from "./dto/auth-credentials.dto";
 
 @Injectable()
 export class AuthService {
-   constructor(@InjectRepository(UserRepository) private userRepository: UserRepository) {}
+	constructor(
+		@InjectRepository(UserRepository) private userRepository: UserRepository
+	) {}
 
-   async signUp(authCredentialsDto: AuthCredentialsDto) {
-      return this.userRepository.signUp(authCredentialsDto);
-   }
+	async signUp(authCredentialsDto: AuthCredentialsDto) {
+		return this.userRepository.signUp(authCredentialsDto);
+	}
 
-   async signIn(authCredentialsDto: AuthCredentialsDto) {
-      return this.userRepository.validatePassword(authCredentialsDto);
-   }
+	async signIn(authCredentialsDto: AuthCredentialsDto) {
+		return this.userRepository.validatePassword(authCredentialsDto);
+	}
 }

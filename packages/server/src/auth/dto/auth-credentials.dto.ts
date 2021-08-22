@@ -7,16 +7,16 @@ import { IsString, Matches, MaxLength, MinLength } from "class-validator";
 const authRegex = /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 
 class AuthCredentialsDto {
-   @IsString()
-   @MinLength(4)
-   @MaxLength(15)
-   username: string;
+	@IsString()
+	@MinLength(4)
+	@MaxLength(15)
+	username: string;
 
-   @IsString()
-   @MinLength(5)
-   @MaxLength(15)
-   @Matches(authRegex, { message: "Password too weak." })
-   password: string;
+	@IsString()
+	@MinLength(5)
+	@MaxLength(15)
+	@Matches(authRegex, { message: "Password too weak." })
+	password: string;
 }
 
 export default AuthCredentialsDto;

@@ -3,13 +3,13 @@ import { allowedTaskStatuses } from "../../utils/allowedTaskStatuses";
 import { TasksStatusEnum } from "../enum/tasks-status.enum";
 
 class GetTasksFilterDto {
-   @IsOptional()
-   @IsIn(allowedTaskStatuses)
-   status: TasksStatusEnum;
+	@IsOptional()
+	@IsIn(allowedTaskStatuses)
+	status: TasksStatusEnum;
 
-   @IsOptional()
-   @IsString()
-   search: string;
+	@IsOptional()
+	@IsString()
+	search: string;
 }
 
 export default GetTasksFilterDto;
