@@ -6,7 +6,7 @@
       "install:all" : "yarn install",
       "start:dev": "next dev",
       "build": "next build",
-      "start": "next start",
+      "start": "next start -p 3001",
       "prettier:check": "prettier \"*.ts\"",
       "prettier:format": "prettier --write \"*.ts\"",
       "lint": "eslint ./*.{ts,tsx}",
