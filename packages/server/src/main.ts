@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { config } from "dotenv";
 
 config();
+
 async function bootstrap(): Promise<void> {
 	const port = process.env.SERVER_PORT || 3000;
 	const logger = new Logger("bootstrap");

@@ -11,6 +11,7 @@ import GetTasksFilterDto from "./dto/get-tasks-filter.dto";
 @Injectable()
 export class TasksService {
 	private logger = new Logger("TaskService");
+
 	constructor(
 		@InjectRepository(TaskRepository)
 		private taskRepository: TaskRepository

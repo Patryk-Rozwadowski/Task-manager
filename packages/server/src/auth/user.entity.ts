@@ -1,5 +1,6 @@
 import * as bcrypt from "bcrypt";
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
+
 @Entity()
 @Unique(["username"])
 class User extends BaseEntity {
