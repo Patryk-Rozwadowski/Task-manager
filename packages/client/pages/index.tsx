@@ -5,7 +5,7 @@ import {
 	incrementByAmount,
 	selectCount,
 } from "../redux/counter/counterSlice";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/common/hooks";
 import { fetchTasks, getTasks } from "../redux/dashboard/dashboardSlice";
 
 const IndexPage: React.FC = () => {
