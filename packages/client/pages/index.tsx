@@ -6,7 +6,7 @@ import {
 	selectCount,
 } from "../redux/slices/counter/counterSlice";
 import { useAppDispatch, useAppSelector } from "../redux/common/hooks";
-import { fetchTasks, getTasks } from "../redux/slices/dashboard/dashboardSlice";
+import { fetchTasks, getTasks } from "../redux/slices/dashboard/tasksSlice";
 
 const IndexPage: React.FC = () => {
 	const dispatch = useAppDispatch();
