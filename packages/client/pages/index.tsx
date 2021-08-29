@@ -4,9 +4,9 @@ import {
 	increment,
 	incrementByAmount,
 	selectCount,
-} from "../redux/counter/counterSlice";
+} from "../redux/slices/counter/counterSlice";
 import { useAppDispatch, useAppSelector } from "../redux/common/hooks";
-import { fetchTasks, getTasks } from "../redux/dashboard/dashboardSlice";
+import { fetchTasks, getTasks } from "../redux/slices/dashboard/dashboardSlice";
 
 const IndexPage: React.FC = () => {
 	const dispatch = useAppDispatch();

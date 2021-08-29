@@ -53,7 +53,6 @@ export class TasksController {
 		return createdNewTask;
 	}
 
-	//
 	@Delete("/:id")
 	@ApiOperation({
 		summary: "Delete task",
