@@ -1,5 +1,5 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import tasksReducer from "./slices/dashboard/tasksSlice";
+import tasksReducer from "./slices/tasks/tasks.slice";
 
 const store = configureStore({
 	reducer: {
