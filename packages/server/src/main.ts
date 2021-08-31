@@ -10,6 +10,7 @@ async function bootstrap(): Promise<void> {
 	const port = process.env.SERVER_PORT || 3001;
 	const logger = new Logger("bootstrap");
 	const app = await NestFactory.create(AppModule);
+	app.enableCors();
 
 	const apiDocumentBuilder = new DocumentBuilder()
 		.setTitle("Task manager")
