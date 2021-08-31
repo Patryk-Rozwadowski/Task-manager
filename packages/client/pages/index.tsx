@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/common/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/common/hooks/hooks";
 import { getAllTasks } from "../redux/slices/dashboard/tasksSlice";
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../redux/store";
