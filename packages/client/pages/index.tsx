@@ -3,26 +3,38 @@ import {
 	decrement,
 	increment,
 	incrementByAmount,
-	selectCount,
 } from "../redux/slices/counter/counterSlice";
 import { useAppDispatch, useAppSelector } from "../redux/common/hooks";
-import { fetchTasks, getTasks } from "../redux/slices/dashboard/tasksSlice";
+import { getAllTasks } from "../redux/slices/dashboard/tasksSlice";
+import { createSelector } from "@reduxjs/toolkit";
+import { RootState } from "../redux/store";
+
+export const selectQuote = (state: RootState) => state.tasks;
+
+export const tasksSelector = createSelector(selectQuote, (state) => state);
 
 const IndexPage: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const count = useAppSelector(selectCount);
-	const tasks = useAppSelector(getTasks);
+	const { data, pending, error } = useAppSelector(tasksSelector);
 	const [incrementAmount, setIncrementAmount] = useState<number>(0);
 	useEffect(() => {
-		dispatch(fetchTasks());
-	});
+		dispatch(getAllTasks());
+	}, []);
 	return (
 		<>
 			<h1>Welcome to the greatest app in the world!</h1>
 			<h2>
-				The current number is
-				{count}
-				{tasks}
+				{!pending ? (
+					data.map((el) => (
+						<>
+							<p>{el.id}</p>
+							<p>{el.title}</p>
+							<p>{el.description}</p>
+						</>
+					))
+				) : (
+					<p>loading</p>
+				)}
 			</h2>
 			<div>
 				<input
